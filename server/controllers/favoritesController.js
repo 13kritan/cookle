@@ -1,30 +1,47 @@
 const Favorite = require("../models/Favorite");
 
+
+// GET favorites
 const getFavorites = async (req, res) => {
-  const favorites = await Favorite.find({ user: req.user._id });
-  res.json(favorites);
+  try {
+    const favorites = await Favorite.find({ user: req.user.id }).select("recipeId");
+    res.status(200).json(favorites);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
+// ADD favorite
 const addFavorite = async (req, res) => {
-  const { recipeId, title, image, nutrition } = req.body;
-  const favorite = await Favorite.create({
-    user: req.user._id,
+  const { recipeId } = req.body;
+
+  const exists = await Favorite.findOne({
+    user: req.user.id,
     recipeId,
-    title,
-    image,
-    nutrition,
   });
+
+  if (exists) {
+    return res.status(400).json({ message: "Already favorited" });
+  }
+
+  const favorite = await Favorite.create({
+    user: req.user.id,
+    recipeId,
+  });
+
   res.status(201).json(favorite);
 };
 
+// REMOVE favorite
 const removeFavorite = async (req, res) => {
-  const favorite = await Favorite.findById(req.params.id);
-  if (!favorite) return res.status(404).json({ message: "Favorite not found" });
-  if (favorite.user.toString() !== req.user._id.toString())
-    return res.status(401).json({ message: "Not authorized" });
+  const { recipeId } = req.params;
 
-  await favorite.remove();
-  res.json({ message: "Favorite removed" });
+  await Favorite.findOneAndDelete({
+    user: req.user.id,
+    recipeId,
+  });
+
+  res.json({ message: "Removed from favorites" });
 };
 
 module.exports = { getFavorites, addFavorite, removeFavorite };

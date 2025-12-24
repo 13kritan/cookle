@@ -7,10 +7,9 @@ const {
   removeFavorite,
 } = require("../controllers/favoritesController");
 
-router.use(protect); // All routes protected
 
-router.get("/", getFavorites);
-router.post("/", addFavorite);
-router.delete("/:id", removeFavorite);
+router.get("/", protect, getFavorites);
+router.post("/", protect, addFavorite);
+router.delete("/:recipeId", protect, removeFavorite);
 
 module.exports = router;
