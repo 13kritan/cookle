@@ -9,12 +9,33 @@ dotenv.config();
 
 
 const app = express();
-app.use(cors());
+
+
+const allowedOrigins = [
+  "http://localhost:3000",                   // local dev
+  "https://cookle.netlify.app",       // your live frontend URL (Netlify or Vercel)
+  "https://cookle-frontend.onrender.com" // if testing frontend on Render
+];
+
+app.use(cors({
+  origin: function(origin, callback){
+    if(!origin) return callback(null, true); // allow Postman or curl
+    if(allowedOrigins.indexOf(origin) === -1){
+      return callback(new Error("CORS policy does not allow access from this origin"), false);
+    }
+    return callback(null, true);
+  },
+  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
+  credentials: true
+}));
+
 app.use(express.json());
 
 // MongoDB Connection
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI,{
+    family: 4
+  })
   .then(() => {
     console.log("✅ MongoDB connected");
   })
