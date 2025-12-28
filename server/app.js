@@ -14,7 +14,9 @@ app.use(express.json());
 
 // MongoDB Connection
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI,{
+    family: 4
+  })
   .then(() => {
     console.log("✅ MongoDB connected");
   })
