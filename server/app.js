@@ -18,24 +18,23 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: function(origin, callback){
-    if(!origin) return callback(null, true); // allow Postman or curl
-    if(allowedOrigins.indexOf(origin) === -1){
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // allow Postman or curl
+    if (allowedOrigins.indexOf(origin) === -1) {
       return callback(new Error("CORS policy does not allow access from this origin"), false);
     }
     return callback(null, true);
   },
-  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }))
 
 app.use(express.json());
 
 // MongoDB Connection
-mongoose
-  .connect(process.env.MONGO_URI,{
-    family: 4
-  })
+mongoose.connect(process.env.MONGO_URI, {
+  family: 4
+})
   .then(() => {
     console.log("✅ MongoDB connected");
   })
@@ -43,6 +42,12 @@ mongoose
     console.error("❌ MongoDB connection error:", err.message);
     process.exit(1);
   });
+
+// Test route
+app.get('/', (req, res) => {
+  res.send('Sajilo Budget Backend is running!')
+});
+
 
 // App Routes
 app.use("/api/auth", authRoutes);
