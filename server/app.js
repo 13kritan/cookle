@@ -12,9 +12,10 @@ const app = express();
 
 
 const allowedOrigins = [
-  "http://localhost:3000",                   // local dev
-  "https://cookle.netlify.app",       // your live frontend URL (Netlify or Vercel)
-  "https://cookle-har5.onrender.com" // if testing frontend on Render
+  "http://localhost:3000", // local dev
+  "https://cookle-f.vercel.app"
+  "https://cookle.netlify.app",       // live frontend URL (Netlify or Vercel)
+  "https://cookle-har5.onrender.com" //  on Render
 ];
 
 app.use(cors({
