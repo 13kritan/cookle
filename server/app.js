@@ -46,7 +46,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // Test route
 app.get('/', (req, res) => {
-  res.send('Sajilo Budget Backend is running!')
+  res.send('Cookle Backend is running!')
 });
 
 
